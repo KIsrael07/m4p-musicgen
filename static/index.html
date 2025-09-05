@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gospel Music Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">Gospel Music Generator</h1>
+    <form id="musicForm" class="space-y-4">
+      <div>
+        <label class="block text-gray-700">Song Title</label>
+        <input type="text" id="title" class="w-full border p-2 rounded" placeholder="Enter song title" required>
+      </div>
+      <div>
+        <label class="block text-gray-700">Lyrics (Optional)</label>
+        <textarea id="lyrics" class="w-full border p-2 rounded" rows="4" placeholder="Enter lyrics"></textarea>
+      </div>
+      <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700">Generate Music</button>
+    </form>
+
+    <div id="player" class="mt-6 hidden">
+      <h2 class="text-lg font-semibold mb-2">Your Generated Song</h2>
+      <audio id="audio" controls class="w-full"></audio>
+      <a id="downloadBtn" href="#" download class="mt-2 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Download</a>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('musicForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const lyrics = document.getElementById('lyrics').value;
+
+      const res = await fetch('http://<YOUR-RUNPOD-IP>:7860/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, lyrics })
+      });
+
+      const data = await res.json();
+      document.getElementById('player').classList.remove('hidden');
+      const audio = document.getElementById('audio');
+      audio.src = data.audio_url;
+      document.getElementById('downloadBtn').href = data.audio_url;
+    });
+  </script>
+</body>
+</html>
