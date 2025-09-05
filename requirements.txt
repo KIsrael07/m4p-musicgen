@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+torch
+torchaudio
+musicgen
+pydantic
+python-multipart
